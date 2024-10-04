@@ -1,3 +1,4 @@
+#vars
 variable "region" {
   type = string
 }
