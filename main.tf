@@ -164,7 +164,7 @@ resource "aws_launch_template" "ecs_test_translated" {
     instance_type = var.instance_type
     vpc_security_group_ids = ["${aws_security_group.security_group_api.id}"]
     key_name = aws_key_pair.ecs_key_pair.key_name
-    user_data = filebase64("${path.module}/ecs_api.sh")
+    user_data = filebase64("${path.module}/ecs.sh")
     iam_instance_profile {
       name = aws_iam_instance_profile.ecs_profile.name
     }
@@ -359,7 +359,7 @@ resource "aws_ecs_service" "ecs_service" {
     load_balancer {
         target_group_arn = aws_lb_target_group.ecs_tg.arn
         container_name   = "dockergs"
-        container_port   = 80
+        container_port   = 3000
     }
     depends_on = [aws_autoscaling_group.ecs_asg]
 }
