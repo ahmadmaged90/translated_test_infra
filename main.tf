@@ -245,14 +245,14 @@ resource "aws_elasticache_cluster" "translated_cache" {
     subnet_group_name = ["${aws_elasticache_subnet_group.elasticache_sub_group.id}"]
     security_group_ids = ["${aws_security_group.security_group_cache.id}"]
 }
-resource "aws_elasticache_security_group" "elasticache-security-group" {
-    name = var.elasticache_security_group
-    security_group_names = ["${aws_security_group.security_group_cache.id}"]
-}
-#resource "aws_elasticache_subnet_group" "elasticache_sub_group" {
-#    name = var.elasticache_sub_group
-#    subnet_ids = ["${aws_subnet.translated_db_subnet.id}"]
+#resource "aws_elasticache_security_group" "elasticache-security-group" {
+#    name = var.elasticache_security_group
+#    security_group_names = ["${aws_security_group.security_group_cache.id}"]
 #}
+resource "aws_elasticache_subnet_group" "elasticache_sub_group" {
+    name = var.elasticache_sub_group
+    subnet_ids = ["${aws_subnet.translated_db_subnet.id}"]
+}
 resource "aws_ecs_cluster" "ecs_cluster" {
     name = var.ecs_cluster_name
 }
