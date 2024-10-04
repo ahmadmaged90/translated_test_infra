@@ -171,3 +171,6 @@ variable "container_protocol" {
 variable "container_name" {
   type = string
 }
+variable "zone_id" {
+  type = string
+}

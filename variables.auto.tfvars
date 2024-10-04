@@ -72,3 +72,4 @@ ram_container = 512
 port_container = 3000
 container_protocol = "tcp"
 container_name = "ecs_translated"
+zone_id = "Z10041773JAJ9GT48MEXD"

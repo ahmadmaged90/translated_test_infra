@@ -130,7 +130,7 @@ resource "aws_key_pair" "ecs_key_pair"{
     public_key = tls_private_key.key_pair.public_key_openssh
 }
 resource "aws_iam_role" "ecsinstancerole" {
-   name = "test_role"
+   name = "ecsinstancerole"
    assume_role_policy = <<EOF
     {
         "Version": "2012-10-17",
@@ -189,6 +189,11 @@ resource "aws_autoscaling_group" "ecs_asg" {
         version = "$Latest"
     }
 }
+data "aws_route53_zone" "zone" {
+    zone_id = var.zone_id
+  
+}
+
 resource "aws_lb" "ecs_alb" {
     name               = var.alb_name
     internal           = false
@@ -281,7 +286,7 @@ resource "aws_ecs_cluster_capacity_providers" "cluster_capacity_provider" {
     }
 }
 resource "aws_iam_role" "ecstaskrole" {
-   name = "test_role"
+   name = "ecstaskrole"
    assume_role_policy = <<EOF
     {
         "Version": "2012-10-17",
@@ -326,7 +331,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
             portMappings = [
                 {
                     containerPort = "${var.port_container}"
-                    hostPort = 0
+                    hostPort = "${var.port_container}"
                     protocol = "${var.container_protocol}"
                 }
             ]
