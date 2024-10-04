@@ -1,0 +1,30 @@
+{
+    "name": "nodejs-echo-server-mysql-postgres-redis",
+    "version": "1.0.0",
+    "description": "An Echo server that connects to MySQL, PostgreSQL, and Redis",
+    "main": "app.js",
+    "scripts": {
+      "start": "node echo-server.js",
+      "dev": "nodemon echo-server.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+      "nodejs",
+      "express",
+      "mysql",
+      "postgres",
+      "redis",
+      "docker"
+    ],
+    "author": "Antonio Farina",
+    "license": "ISC",
+    "dependencies": {
+      "express": "^4.21.0",
+      "mysql2": "^3.11.3",
+      "pg": "^8.13.0",
+      "redis": "^4.7.0"
+    },
+    "devDependencies": {
+      "nodemon": "^3.1.7"
+    }
+  }
