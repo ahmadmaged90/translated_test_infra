@@ -242,7 +242,7 @@ resource "aws_elasticache_cluster" "translated_cache" {
     parameter_group_name = "default.redis3.2"
     engine_version = "3.2.10"
     port = 6379
-    subnet_group_name = ["${aws_elasticache_subnet_group.elasticache_sub_group.id}"]
+    subnet_group_name = aws_elasticache_subnet_group.elasticache_sub_group.id
     security_group_ids = ["${aws_security_group.security_group_cache.id}"]
 }
 #resource "aws_elasticache_security_group" "elasticache-security-group" {
