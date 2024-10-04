@@ -229,7 +229,7 @@ resource "aws_db_instance" "translated-test" {
     instance_class = var.instance_class
     db_name = var.db_name
     publicly_accessible = false
-    vpc_security_group_ids =  ["${aws_security_group.security_group_db}"]
+    vpc_security_group_ids =  ["${aws_security_group.security_group_db.id}"]
     db_subnet_group_name = aws_subnet.translated_db_subnet.id
     username = var.db_username
     password = var.db_password
@@ -304,7 +304,7 @@ data "aws_iam_policy" "ecs_task_role" {
     arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 resource "aws_iam_role_policy_attachment" "ecs_task_attachment" {
-    role = aws_iam_role.ecstaskrole
+    role = aws_iam_role.ecstaskrole.name
     policy_arn = data.aws_iam_policy.ecs_task_role.arn
 }
 resource "aws_ecs_task_definition" "ecs_task_definition" {
