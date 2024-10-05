@@ -389,7 +389,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
             memory = "${var.ram_container}"
             essential = true
             logconfiguration = {
-                logDrive = "awslogs"
+                logDriver = "awslogs"
                 options = {
                     "awslogs-group" = "${aws_cloudwatch_log_group.ecs_log_group.name}"
                     "awslogs-region"       = "${var.region}"
