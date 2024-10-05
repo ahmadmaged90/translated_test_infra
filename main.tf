@@ -130,8 +130,16 @@ resource "aws_security_group_rule" "egress_api" {
   
 }
 resource "tls_private_key" "key_pair" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
+    algorithm = "RSA"
+    rsa_bits  = 4096
+}
+resource "local_file" "private_key" {
+    content  = tls_private_key.example.private_key_pem
+    filename = "${path.module}/ecs-key.pem"
+}
+ 
+output "public_key" {
+    value = tls_private_key.example.public_key_openssh
 }
 resource "aws_key_pair" "ecs_key_pair"{
     key_name = var.key_pair_name
