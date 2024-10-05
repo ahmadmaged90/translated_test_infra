@@ -23,6 +23,14 @@ resource "aws_subnet" "translated_db_subnet" {
     Name = "${var.sub_name}-${var.db_zone}"
   }
 }
+resource "aws_subnet" "translated_db_subnet2" {
+  vpc_id = aws_vpc.translated-test.id
+  cidr_block = var.db_cidr2
+  tags = {
+    Name = "${var.sub_name}-db2"
+  }
+}
+
 resource "aws_internet_gateway" "internet_gateway_translated" {
   vpc_id = aws_vpc.translated-test.id
   tags = {
@@ -254,7 +262,7 @@ resource "aws_lb_target_group" "ecs_tg" {
 }
 resource "aws_db_subnet_group" "sub_db_group" {
     name       = "subnet-${var.db_name}"
-    subnet_ids = [ "${aws_db_subnet_group.sub_db_group.id}" ]
+    subnet_ids = [ aws_subnet.translated_db_subnet, aws_subnet.translated_db_subnet2 ]
 }
 resource "aws_db_instance" "translated-test" {
     allocated_storage = var.allocated_storage
@@ -265,6 +273,7 @@ resource "aws_db_instance" "translated-test" {
     instance_class = var.instance_class
     db_name = var.db_name
     publicly_accessible = false
+    availability_zone = var.db_zone
     vpc_security_group_ids =  ["${aws_security_group.security_group_db.id}"]
     db_subnet_group_name = aws_db_subnet_group.sub_db_group.id
     username = var.db_username

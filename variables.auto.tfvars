@@ -9,6 +9,7 @@ availability_zones = [
 internet_gateway_name = "translated_gateway"
 db_zone = "eu-central-1c"
 db_cidr = "10.1.0.64/27"
+db_cidr2 = "10.1.0.96/27"
 security_group_alb_name = "alb_sec_group"
 security_group_api_name = "app_sec_group"
 security_group_db_name = "db_sec_group"

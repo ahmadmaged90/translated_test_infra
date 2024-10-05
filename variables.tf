@@ -23,6 +23,9 @@ variable "internet_gateway_name" {
 variable "db_cidr" {
   type = string
 }
+variable "db_cidr2" {
+  type = string
+}
 variable "db_zone" {
   type = string
 }
