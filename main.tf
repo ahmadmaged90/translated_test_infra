@@ -44,7 +44,7 @@ resource "aws_nat_gateway" "nat_gateway" {
         aws_eip.Nat-Gateway-EIP
     ]
     allocation_id = aws_eip.Nat-Gateway-EIP.id
-    subnet_id = aws_subnet.subnet1.id
+    subnet_id = aws_subnet.translated_test["eu-central-1a"].id
     tags = {
         Name = "nat-gateway_translated"
     }
