@@ -314,6 +314,17 @@ resource "aws_lb_target_group" "ecs_tg" {
         path = "/"
     }
 }
+resource "aws_route53_record" "alias_route53_record" {
+  zone_id = data.aws_route53_zone.zone.id 
+  name    = var.alias
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.ecs_alb.dns_name
+    zone_id                = aws_lb.ecs_alb.zone_id
+    evaluate_target_health = true
+  }
+}
 resource "aws_db_subnet_group" "sub_db_group" {
     name       = "subnet-${var.db_name}"
     subnet_ids = [ aws_subnet.translated_db_subnet.id, aws_subnet.translated_db_subnet2.id ]
