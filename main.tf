@@ -254,7 +254,7 @@ resource "aws_lb_target_group" "ecs_tg" {
 }
 resource "aws_db_subnet_group" "sub_db_group" {
     name       = "subnet-${var.db_name}"
-    subnet_ids = [aws_subnet.translated_db_subnet.id]
+    subnet_ids = aws_subnet.translated_db_subnet.id
 }
 resource "aws_db_instance" "translated-test" {
     allocated_storage = var.allocated_storage
@@ -273,7 +273,7 @@ resource "aws_db_instance" "translated-test" {
 resource "aws_elasticache_cluster" "translated_cache" {
     cluster_id = "cluster-example"
     engine = "redis"
-    node_type = "cache.t2.large"
+    node_type = "cache.t2.micro"
     num_cache_nodes = 1
     parameter_group_name = "default.redis4.0"
     engine_version = var.cache_engine
