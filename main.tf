@@ -179,7 +179,7 @@ data "aws_ami" "ecs_optimized" {
     most_recent = true
     owners = ["self"]
     filter {
-        name = "ecs-ami"
+        name = "name"
         values = ["amzn2-ami-ecs-*-x86_64-gp2"]
     }
 }
