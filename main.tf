@@ -37,12 +37,29 @@ resource "aws_internet_gateway" "internet_gateway_translated" {
     Name = var.internet_gateway_name
   }
 }
+resource "aws_eip" "Nat-Gateway-EIP" {
+}
+resource "aws_nat_gateway" "nat_gateway" {
+    depends_on = [
+        aws_eip.Nat-Gateway-EIP
+    ]
+    allocation_id = aws_eip.Nat-Gateway-EIP.id
+    subnet_id = aws_subnet.subnet1.id
+    tags = {
+        Name = "nat-gateway_translated"
+    }
+}
 resource "aws_route_table" "route_table_translated" {
   vpc_id = aws_vpc.translated-test.id
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.internet_gateway_translated.id
   }
+}
+resource "aws_route" "nat_route" {
+  route_table_id = aws_route_table.route_table_translated.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id = aws_nat_gateway.nat_gateway.id
 }
 resource "aws_route_table_association" "subnet_route" {
   for_each = aws_subnet.translated_test
