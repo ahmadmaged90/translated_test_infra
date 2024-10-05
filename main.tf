@@ -202,11 +202,19 @@ resource "aws_acm_certificate" "cert" {
     }
 }
 resource "aws_route53_record" "cert_record" {
-    name = aws_acm_certificate.cert.domain_validation_options[0].resource_record_name
-    type = aws_acm_certificate.cert.domain_validation_options[0].resource_record_type
+    for_each = {
+    for atrb in aws_acm_certificate.cert.domain_validation_options : atrb.domain_name => {
+      name  = atrb.resource_record_name
+      type  = atrb.resource_record_type
+      value = atrb.resource_record_value
+    }
+  }
+ 
     zone_id = data.aws_route53_zone.zone.zone_id
-    records = [aws_acm_certificate.cert.domain_validation_options[0].resource_record_value]
-    ttl = 300
+    name = each.value.name 
+    type    = each.value.type
+    ttl     = 300
+    records = [each.value.value]
 }
 resource "aws_acm_certificate_validation" "cert_validation" {
     certificate_arn = aws_acm_certificate.cert.arn
