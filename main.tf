@@ -34,12 +34,13 @@ resource "aws_subnet" "public_subnet" {
     depends_on = [ aws_subnet.translated_test ]
     vpc_id = aws_vpc.translated-test.id
     cidr_block = var.public_subnet
+    availability_zone = var.public_zone
     tags = {
         Name = "${var.sub_name}-public"
     }
 }
 resource "aws_internet_gateway" "internet_gateway_translated" {
-  depends_on = [ aws_subnet.public_subnet,aws_subnet.translated_test, aws_nat_gateway.nat_gateway ]
+  depends_on = [ aws_subnet.public_subnet,aws_subnet.translated_test ]
   vpc_id = aws_vpc.translated-test.id
   tags = {
     Name = var.internet_gateway_name
@@ -51,6 +52,7 @@ resource "aws_nat_gateway" "nat_gateway" {
     depends_on = [
         aws_eip.Nat-Gateway-EIP,
         aws_subnet.public_subnet,
+        aws_internet_gateway.internet_gateway_translated
     ]
     allocation_id = aws_eip.Nat-Gateway-EIP.id
     subnet_id = aws_subnet.public_subnet.id
