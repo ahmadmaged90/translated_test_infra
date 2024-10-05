@@ -178,8 +178,9 @@ resource "aws_iam_role_policy_attachment" "ecs_policy_attachment" {
 data "aws_ami" "ecs_optimized" {
     most_recent = true
     owners = ["aws"]
-    filters = {
-        name = "amzn2-ami-ecs-*-x86_64-gp2"
+    filter {
+        name = "ecs-ami"
+        values = ["amzn2-ami-ecs-*-x86_64-gp2"]
     }
 }
 resource "aws_launch_template" "ecs_test_translated" {
