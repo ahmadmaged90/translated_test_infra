@@ -180,7 +180,7 @@ data "aws_ami" "ecs_optimized" {
     owners = ["self"]
     filter {
         name = "name"
-        values = ["amzn2-ami-ecs-*-x86_64-gp2"]
+        values = ["amzn2-ami-ecs-inf-hvm-2.0.20240815-x86_64-ebs"]
     }
 }
 resource "aws_launch_template" "ecs_test_translated" {
