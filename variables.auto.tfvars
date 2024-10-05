@@ -73,3 +73,7 @@ port_container = 3000
 container_protocol = "tcp"
 container_name = "ecs_translated"
 zone_id = "Z10041773JAJ9GT48MEXD"
+capacity_provider = "translated-capacity-provider"
+domain_name = "translated.dev.service-tm.com"
+main_domain_name = "dev.service-tm.com"
+cache_engine= "6.0"

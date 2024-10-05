@@ -174,3 +174,6 @@ variable "container_name" {
 variable "zone_id" {
   type = string
 }
+variable "domain_name" {
+  type = string
+}

@@ -193,7 +193,26 @@ data "aws_route53_zone" "zone" {
     zone_id = var.zone_id
   
 }
-
+resource "aws_acm_certificate" "cert" {
+    domain_name = var.domain_name
+    validation_method = "DNS"
+    subject_alternative_names = ["${var.main_domain_name}"]
+    tags = {
+      Name = "translated-cert"
+    }
+}
+resource "aws_route53_record" "cert_record" {
+    name = aws_acm_certificate.cert.domain_validation_options[0].resource_record_name
+    type = aws_acm_certificate.cert.domain_validation_options[0].resource_record_type
+    zone_id = data.aws_route53_zone.zone.zone_id
+    records = [aws_acm_certificate.cert.domain_validation_options[0].resource_record_value]
+    ttl = 300
+}
+resource "aws_acm_certificate_validation" "cert_validation" {
+    certificate_arn = aws_acm_certificate.cert.arn
+    validation_record_fqdns = [aws_route53_record.cert_record.fqdn]
+  
+}
 resource "aws_lb" "ecs_alb" {
     name               = var.alb_name
     internal           = false
@@ -209,6 +228,7 @@ resource "aws_lb_listener" "ecs_alb_listener" {
     load_balancer_arn = aws_lb.ecs_alb.arn
     port              = var.listener_port
     protocol          = var.listener_protocol
+    certificate_arn = aws_acm_certificate.cert.arn
 
     default_action {
         type             = "forward"
@@ -235,7 +255,7 @@ resource "aws_db_instance" "translated-test" {
     db_name = var.db_name
     publicly_accessible = false
     vpc_security_group_ids =  ["${aws_security_group.security_group_db.id}"]
-    db_subnet_group_name = aws_subnet.translated_db_subnet.id
+    db_subnet_group_name = aws_subnet.translated_db_subnet.name
     username = var.db_username
     password = var.db_password
 }
@@ -262,7 +282,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
     name = var.ecs_cluster_name
 }
 resource "aws_ecs_capacity_provider" "ecs_capacity_provider" {
-    name = "ecs_provider"
+    name = var.capacity_provider
 
     auto_scaling_group_provider {
         auto_scaling_group_arn = aws_autoscaling_group.ecs_asg.arn
