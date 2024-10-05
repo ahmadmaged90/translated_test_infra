@@ -134,12 +134,12 @@ resource "tls_private_key" "key_pair" {
     rsa_bits  = 4096
 }
 resource "local_file" "private_key" {
-    content  = tls_private_key.key_pair_key_pem
+    content  = tls_private_key.key_pair.private_key_pem
     filename = "${path.module}/ecs-key.pem"
 }
  
 output "public_key" {
-    value = tls_private_key.example.public_key_openssh
+    value = tls_private_key.key_pair.private_key_openssh
 }
 resource "aws_key_pair" "ecs_key_pair"{
     key_name = var.key_pair_name
