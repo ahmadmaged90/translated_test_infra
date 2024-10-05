@@ -58,6 +58,15 @@ egress_rules_api = [
         protocol = "-1"
         cidr_blocks = [ "0.0.0.0/0"]
     },
+    {
+        
+        from_port = 6379
+        to_port = 6379
+        protocol = "tcp"
+        cidr_blocks = [ 
+            "10.1.0.64/27" 
+        ]
+    },
 ]
 template_launch_name = "ecs_translated_test"
 image_id = "ami-0592c673f0b1e7665"
