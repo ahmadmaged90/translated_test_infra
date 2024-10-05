@@ -290,6 +290,10 @@ resource "aws_elasticache_cluster" "translated_cache" {
     subnet_group_name = aws_elasticache_subnet_group.elasticache_sub_group.id
     security_group_ids = ["${aws_security_group.security_group_cache.id}"]
 }
+output "elasticache_endpoint" {
+    value = aws_elasticache_cluster.translated_cache.configuration_endpoint
+  
+}
 #resource "aws_elasticache_security_group" "elasticache-security-group" {
 #    name = var.elasticache_security_group
 #    security_group_names = ["${aws_security_group.security_group_cache.id}"]
