@@ -77,7 +77,7 @@ resource "aws_security_group" "security_group_db" {
     to_port     = 3306
     protocol    = "tcp"
     self        = "false"
-    cidr_blocks = var.subnet_cidrs_api
+    cidr_blocks = ["${var.vpc_cidr}"]
     description = "allow traffic from the api machines"
   }
   egress {
@@ -94,7 +94,7 @@ resource "aws_security_group" "security_group_cache" {
     from_port   = 6379
     to_port     = 6379
     protocol    = "tcp"
-    cidr_blocks = var.subnet_cidrs_api
+    cidr_blocks = ["${var.vpc_cidr}"]
     description = "allow traffic from the api machines"
   }
   egress {
@@ -120,7 +120,7 @@ resource "aws_security_group_rule" "ingress_api" {
 }
 
 resource "aws_security_group_rule" "egress_api" {
-  for_each = { for index, rule in var.ingress_rules_api : index => rule}
+  for_each = { for index, rule in var.egress_rules_api : index => rule}
   type = "egress"
   from_port = each.value.from_port
   to_port = each.value.to_port
