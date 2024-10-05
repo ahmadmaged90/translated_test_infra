@@ -363,7 +363,7 @@ data "aws_iam_policy" "ecs_task_role" {
 }
 resource "aws_iam_role_policy_attachment" "ecs_task_attachment" {
     role = aws_iam_role.ecstaskrole.name
-    policy_arn = data.aws_iam_policy.ecs_task_role.arn
+    policy_arn = ["${data.aws_iam_policy.ecs_task_role.arn}","arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"]
 }
 resource "aws_ecs_task_definition" "ecs_task_definition" {
     family = var.ecs_family_name
