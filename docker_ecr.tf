@@ -25,7 +25,7 @@ resource "null_resource" "docker_tag" {
     provisioner "local-exec" {
       command = <<EOT
         
-        sudo docker tag translated-test:latest ${aws_ecr_repository.translated-repo-test.repository_url}:latest
+        sudo docker tag translated-test ${aws_ecr_repository.translated-repo-test.repository_url}:latest
       
       EOT
     }
@@ -34,7 +34,7 @@ resource "null_resource" "docker_push" {
     provisioner "local-exec" {
       command = <<EOT
         sudo docker push "${aws_ecr_repository.translated-repo-test.repository_url}:latest"
-      EOT
+      EOTS
     }
   
 }
