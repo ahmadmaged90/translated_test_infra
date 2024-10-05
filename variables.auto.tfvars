@@ -23,6 +23,15 @@ ingress_rules_api = [
             "10.1.0.32/27" 
         ]
     },
+    {
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = [ 
+            "10.1.0.0/27",
+            "10.1.0.32/27" 
+        ]
+    },
 
 ]
 egress_rules_api = [ 
@@ -32,6 +41,15 @@ egress_rules_api = [
         protocol = "tcp"
         cidr_blocks = [ 
             "10.1.0.64/27" 
+        ]
+    },
+    {
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = [ 
+            "10.1.0.0/27",
+            "10.1.0.32/27" 
         ]
     }, 
 ]
