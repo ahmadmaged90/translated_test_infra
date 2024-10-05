@@ -140,6 +140,7 @@ resource "local_file" "private_key" {
  
 output "public_key" {
     value = tls_private_key.key_pair.private_key_openssh
+    sensitive = false
 }
 resource "aws_key_pair" "ecs_key_pair"{
     key_name = var.key_pair_name
