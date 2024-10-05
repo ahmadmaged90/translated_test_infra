@@ -185,9 +185,6 @@ resource "aws_launch_template" "ecs_test_translated" {
     iam_instance_profile {
       name = aws_iam_instance_profile.ecs_profile.name
     }
-    lifecycle {
-        create_before_destroy = true
-    }
     tag_specifications {
         resource_type = "instance"
          tags = {
