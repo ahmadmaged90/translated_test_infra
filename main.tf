@@ -321,7 +321,7 @@ resource "aws_db_instance" "translated-test" {
     db_subnet_group_name = aws_db_subnet_group.sub_db_group.id
     username = var.db_username
     password = var.db_password
-    skip_final_snapshot = false
+    skip_final_snapshot = true
 }
 resource "aws_elasticache_cluster" "translated_cache" {
     cluster_id = "cluster-example"
