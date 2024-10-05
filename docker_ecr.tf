@@ -7,7 +7,7 @@ data "aws_ecr_authorization_token" "auth_ecr" {
 resource "null_resource" "docker_login" {
     provisioner "local-exec" {
       command = <<EOT
-        aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${aws_ecr_repository.translated-repo-test.repository_url}
+        aws ecr get-login-password --region ${var.region} | docker login --username AWS --password ${data.aws_ecr_authorization_token.auth_ecr.authorization_token} ${aws_ecr_repository.translated-repo-test.repository_url}
       EOT
     }
 
