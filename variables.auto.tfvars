@@ -3,9 +3,11 @@ subnet_cidrs_api = [
     "10.1.0.32/27"
 ]
 availability_zones = [
-    "eu-central-1a",
-    "eu-central-1b"
+    "eu-central-1b",
+    "eu-central-1c"
 ]
+public_subnet = "10.1.0.128/27"
+public_zone = "eu-central-1a"
 internet_gateway_name = "translated_gateway"
 db_zone = "eu-central-1c"
 db_cidr = "10.1.0.64/27"
