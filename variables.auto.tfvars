@@ -78,4 +78,3 @@ capacity_provider = "translated-capacity-provider"
 domain_name = "translated.dev.service-tm.com"
 main_domain_name = "dev.service-tm.com"
 cache_engine= "4.0.10"
-redis_port = 6379
