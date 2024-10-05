@@ -179,7 +179,7 @@ data "aws_ami" "ecs_optimized" {
     most_recent = true
     filter {
         name = "name"
-        values = ["amzn2-ami-ecs-inf-hvm-2.0.20240815-x86_64-ebs"]
+        values = ["amzn2-ami-ecs-hvm-2.0.20230509-x86_64-ebs"]
     }
 }
 resource "aws_launch_template" "ecs_test_translated" {
