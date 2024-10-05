@@ -7,7 +7,7 @@ resource "aws_vpc" "translated-test" {
 }
 resource "aws_subnet" "translated_test" {
   for_each = zipmap(var.availability_zones, var.subnet_cidrs_api)
-  map_public_ip_on_launch = true
+  #map_public_ip_on_launch = true
   vpc_id = aws_vpc.translated-test.id
   cidr_block = each.value
   availability_zone = each.key
@@ -265,7 +265,7 @@ resource "aws_elasticache_cluster" "translated_cache" {
     node_type = "cache.m4.large"
     num_cache_nodes = 1
     parameter_group_name = "default.redis3.2"
-    engine_version = "3.2.10"
+    engine_version = var.cache_engine
     port = 6379
     subnet_group_name = aws_elasticache_subnet_group.elasticache_sub_group.id
     security_group_ids = ["${aws_security_group.security_group_cache.id}"]
