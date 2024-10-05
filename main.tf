@@ -273,9 +273,9 @@ resource "aws_db_instance" "translated-test" {
 resource "aws_elasticache_cluster" "translated_cache" {
     cluster_id = "cluster-example"
     engine = "redis"
-    node_type = "cache.m4.large"
+    node_type = "cache.t2.large"
     num_cache_nodes = 1
-    parameter_group_name = "default.redis3.2"
+    parameter_group_name = "default.redis4.0"
     engine_version = var.cache_engine
     port = 6379
     subnet_group_name = aws_elasticache_subnet_group.elasticache_sub_group.id
@@ -394,7 +394,7 @@ resource "aws_ecs_service" "ecs_service" {
     }
     load_balancer {
         target_group_arn = aws_lb_target_group.ecs_tg.arn
-        container_name   = "dockergs"
+        container_name   = var.container_name
         container_port   = 3000
     }
     depends_on = [aws_autoscaling_group.ecs_asg]
