@@ -245,6 +245,10 @@ resource "aws_lb_target_group" "ecs_tg" {
         path = "/"
     }
 }
+resource "aws_db_subnet_group" "default" {
+    name       = "subnet-${var.db_name}"
+    subnet_ids = [aws_subnet.translated_db_subnet.id]
+}
 resource "aws_db_instance" "translated-test" {
     allocated_storage = var.allocated_storage
     identifier = var.db_name

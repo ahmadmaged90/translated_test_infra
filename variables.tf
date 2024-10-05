@@ -177,3 +177,12 @@ variable "zone_id" {
 variable "domain_name" {
   type = string
 }
+variable "capacity_provider" {
+  type = string
+}
+variable "main_domain_name" {
+  type = string
+}
+variable "cache_engine" {
+  type = string
+}
