@@ -202,10 +202,10 @@ resource "aws_acm_certificate" "cert" {
     }
 }
 resource "aws_route53_record" "cert_record" {
-    name = aws_acm_certificate.cert.domain_validation_options[0].resource_record_name
-    type = aws_acm_certificate.cert.domain_validation_options[0].resource_record_type
+    name = aws_acm_certificate.cert.domain_validation_options.resource_record_name
+    type = aws_acm_certificate.cert.domain_validation_options.resource_record_type
     zone_id = data.aws_route53_zone.zone.zone_id
-    records = [aws_acm_certificate.cert.domain_validation_options[0].resource_record_value]
+    records = [aws_acm_certificate.cert.domain_validation_options.resource_record_value]
     ttl = 300
 }
 resource "aws_acm_certificate_validation" "cert_validation" {
@@ -245,7 +245,7 @@ resource "aws_lb_target_group" "ecs_tg" {
         path = "/"
     }
 }
-resource "aws_db_subnet_group" "default" {
+resource "aws_db_subnet_group" "sub_db_group" {
     name       = "subnet-${var.db_name}"
     subnet_ids = [aws_subnet.translated_db_subnet.id]
 }
@@ -259,7 +259,7 @@ resource "aws_db_instance" "translated-test" {
     db_name = var.db_name
     publicly_accessible = false
     vpc_security_group_ids =  ["${aws_security_group.security_group_db.id}"]
-    db_subnet_group_name = aws_subnet.translated_db_subnet.name
+    db_subnet_group_name = aws_db_subnet_group.sub_db_group.id
     username = var.db_username
     password = var.db_password
 }
