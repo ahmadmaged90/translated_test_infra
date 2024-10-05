@@ -19,8 +19,7 @@ ingress_rules_api = [
         to_port = 3000
         protocol = "tcp"
         cidr_blocks = [ 
-            "10.1.0.0/27",
-            "10.1.0.32/27" 
+            "10.1.0.0/24", 
         ]
     },
     {
@@ -32,6 +31,7 @@ ingress_rules_api = [
             "10.1.0.32/27" 
         ]
     },
+    
 
 ]
 egress_rules_api = [ 
@@ -51,7 +51,13 @@ egress_rules_api = [
             "10.1.0.0/27",
             "10.1.0.32/27" 
         ]
-    }, 
+    },
+    {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = [ "0.0.0.0/0"]
+    },
 ]
 template_launch_name = "ecs_translated_test"
 image_id = "ami-0592c673f0b1e7665"
