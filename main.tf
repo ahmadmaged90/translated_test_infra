@@ -175,9 +175,16 @@ resource "aws_iam_role_policy_attachment" "ecs_policy_attachment" {
     role = aws_iam_role.ecsinstancerole.name
     policy_arn = data.aws_iam_policy.ecs_policy_role.arn
 }
+data "aws_ami" "ecs_optimized" {
+    most_recent = true
+    owners = ["aws"]
+    filters = {
+        name = "amzn2-ami-ecs-*-x86_64-gp2"
+    }
+}
 resource "aws_launch_template" "ecs_test_translated" {
     name = var.template_launch_name
-    image_id = var.image_id
+    image_id = data.aws_ami.ecs_optimized.id
     instance_type = var.instance_type
     vpc_security_group_ids = ["${aws_security_group.security_group_api.id}"]
     key_name = aws_key_pair.ecs_key_pair.key_name
@@ -300,10 +307,6 @@ output "elasticache_endpoint" {
     value = aws_elasticache_cluster.translated_cache.configuration_endpoint
   
 }
-#resource "aws_elasticache_security_group" "elasticache-security-group" {
-#    name = var.elasticache_security_group
-#    security_group_names = ["${aws_security_group.security_group_cache.id}"]
-#}
 resource "aws_elasticache_subnet_group" "elasticache_sub_group" {
     name = var.elasticache_sub_group
     subnet_ids = ["${aws_subnet.translated_db_subnet.id}"]
