@@ -177,7 +177,6 @@ resource "aws_iam_role_policy_attachment" "ecs_policy_attachment" {
 }
 data "aws_ami" "ecs_optimized" {
     most_recent = true
-    owners = ["self"]
     filter {
         name = "name"
         values = ["amzn2-ami-ecs-inf-hvm-2.0.20240815-x86_64-ebs"]
