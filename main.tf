@@ -271,9 +271,6 @@ resource "aws_acm_certificate_validation" "cert_validation" {
     certificate_arn = aws_acm_certificate.cert.arn
     validation_record_fqdns = [for domain, record in aws_route53_record.cert_record : record.fqdn]
 }
-locals {
-  all_public_subnet= concat(aws_subnet.public_subnet, aws_subnet.translated_test)
-}
 resource "aws_lb" "ecs_alb" {
     name               = var.alb_name
     internal           = false
