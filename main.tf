@@ -50,7 +50,7 @@ resource "aws_nat_gateway" "nat_gateway" {
         aws_eip.Nat-Gateway-EIP
     ]
     allocation_id = aws_eip.Nat-Gateway-EIP.id
-    subnet_id = aws_subnet.translated_test["eu-central-1a"].id
+    subnet_id = aws_subnet.translated_test["eu-central-1c"].id
     tags = {
         Name = "nat-gateway_translated"
     }
@@ -279,7 +279,7 @@ resource "aws_lb" "ecs_alb" {
     internal           = false
     load_balancer_type = "application"
     security_groups    = ["${aws_security_group.security_group_alb.id}"]
-    subnets            = local.all_public_subnet
+    subnets            = [aws_subnet.public_subnet.id, aws_subnet.translated_test["eu-central-1c"].id, aws_subnet.translated_test["eu-central-1b"].id]
 
     tags = {
         Name = var.alb_name
