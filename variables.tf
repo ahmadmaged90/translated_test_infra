@@ -107,6 +107,7 @@ variable "db_username" {
 }
 variable "db_password" {
   type = string
+  sensitive = true
 }
 variable "engine_version" {
   type = string
