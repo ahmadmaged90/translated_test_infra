@@ -16,7 +16,7 @@ resource "null_resource" "docker_build" {
     provisioner "local-exec" {
       command = <<EOT
         
-        sudo docker build --build-arg password=${var.db_password} --build-arg username=${var.db_username} --build-arg db_url=${aws_db_instance.translated-test.endpoint} --build-arg redis_url=${aws_elasticache_cluster.translated_cache.cache_nodes[0].address} --build-arg db_name=${var.db_name} -t translated-test .
+        sudo docker build --build-arg password=${var.db_password} --build-arg username=${var.db_username} --build-arg db_url=${aws_db_instance.translated-test.endpoint} --build-arg redis_url=${aws_elasticache_cluster.translated_cache.cache_nodes[0].address} --build-arg db_name=${var.db_name} -t translated-test:latest .
       EOT
     }
   
@@ -25,7 +25,7 @@ resource "null_resource" "docker_tag" {
     provisioner "local-exec" {
       command = <<EOT
         
-        sudo docker tag translated-test ${aws_ecr_repository.translated-repo-test.repository_url}:latest
+        sudo docker tag translated-test:latest ${aws_ecr_repository.translated-repo-test.repository_url}:latest
       
       EOT
     }
