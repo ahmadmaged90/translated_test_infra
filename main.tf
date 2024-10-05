@@ -6,31 +6,32 @@ resource "aws_vpc" "translated-test" {
     }
 }
 resource "aws_subnet" "translated_test" {
-  for_each = zipmap(var.availability_zones, var.subnet_cidrs_api)
+    for_each = zipmap(var.availability_zones, var.subnet_cidrs_api)
   #map_public_ip_on_launch = true
-  vpc_id = aws_vpc.translated-test.id
-  cidr_block = each.value
-  availability_zone = each.key
-  tags = {
-    Name = "${var.sub_name}-${each.key}"
-  }
+    vpc_id = aws_vpc.translated-test.id
+    cidr_block = each.value
+    availability_zone = each.key
+    tags = {
+        Name = "${var.sub_name}-${each.key}"
+    }
 }
 resource "aws_subnet" "translated_db_subnet" {
-  vpc_id = aws_vpc.translated-test.id
-  cidr_block = var.db_cidr
-  availability_zone = var.db_zone
-  tags = {
-    Name = "${var.sub_name}-${var.db_zone}"
-  }
+    vpc_id = aws_vpc.translated-test.id
+    cidr_block = var.db_cidr
+    availability_zone = var.db_zone
+    tags = {
+        Name = "${var.sub_name}-${var.db_zone}"
+    }
 }
 resource "aws_subnet" "translated_db_subnet2" {
-  vpc_id = aws_vpc.translated-test.id
-  cidr_block = var.db_cidr2
-  tags = {
-    Name = "${var.sub_name}-db2"
-  }
+    vpc_id = aws_vpc.translated-test.id
+    cidr_block = var.db_cidr2
+    tags = {
+        Name = "${var.sub_name}-db2"
+    }
 }
 resource "aws_subnet" "public_subnet" {
+    depends_on = [ aws_subnet.translated_test ]
     vpc_id = aws_vpc.translated-test.id
     cidr_block = var.public_subnet
     tags = {
@@ -38,6 +39,7 @@ resource "aws_subnet" "public_subnet" {
     }
 }
 resource "aws_internet_gateway" "internet_gateway_translated" {
+  depends_on = [ aws_subnet.public_subnet,aws_subnet.translated_test, aws_nat_gateway.nat_gateway ]
   vpc_id = aws_vpc.translated-test.id
   tags = {
     Name = var.internet_gateway_name
@@ -47,36 +49,43 @@ resource "aws_eip" "Nat-Gateway-EIP" {
 }
 resource "aws_nat_gateway" "nat_gateway" {
     depends_on = [
-        aws_eip.Nat-Gateway-EIP
+        aws_eip.Nat-Gateway-EIP,
+        aws_subnet.public_subnet,
     ]
     allocation_id = aws_eip.Nat-Gateway-EIP.id
-    subnet_id = aws_subnet.translated_test["eu-central-1c"].id
+    subnet_id = aws_subnet.public_subnet.id
     tags = {
         Name = "nat-gateway_translated"
     }
 }
 resource "aws_route_table" "route_table_translated" {
-  vpc_id = aws_vpc.translated-test.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.internet_gateway_translated.id
-  }
+    depends_on = [  
+        aws_nat_gateway.nat_gateway,
+        aws_route_table.nat_route
+    ]
+    vpc_id = aws_vpc.translated-test.id
+    route {
+        cidr_block = "0.0.0.0/0"
+        gateway_id = aws_internet_gateway.internet_gateway_translated.id
+    }
 }
 resource "aws_route_table" "nat_route" {
-  vpc_id = aws_vpc.translated-test.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gateway.id
-  }
+    depends_on = [ aws_nat_gateway.nat_gateway ]
+    vpc_id = aws_vpc.translated-test.id
+    route {
+        cidr_block = "0.0.0.0/0"
+        nat_gateway_id = aws_nat_gateway.nat_gateway.id
+   }
 }
 resource "aws_route_table_association" "subnet_route" {
-  for_each = aws_subnet.translated_test
-  subnet_id      = each.value.id
-  route_table_id = aws_route_table.nat_route.id
+    depends_on = [ aws_nat_gateway.nat_gateway, aws_subnet.public_subnet, aws_route_table.nat_route ]
+    for_each = aws_subnet.translated_test
+    subnet_id      = each.value.id
+    route_table_id = aws_route_table.nat_route.id
 }
 resource "aws_route_table_association" "public_subnet_route" {
-  for_each = aws_subnet.translated_test
-  subnet_id      = each.value.id
+  depends_on = [ aws_nat_gateway.nat_gateway, aws_subnet.public_subnet, aws_route_table.nat_route, aws_route_table_association.subnet_route ] 
+  subnet_id      = aws_subnet.public_subnet.id
   route_table_id = aws_route_table.route_table_translated.id
 }
 resource "aws_security_group" "security_group_alb" {
@@ -322,6 +331,7 @@ resource "aws_db_instance" "translated-test" {
     username = var.db_username
     password = var.db_password
     skip_final_snapshot = true
+    
 }
 resource "aws_elasticache_cluster" "translated_cache" {
     cluster_id = "cluster-example"
