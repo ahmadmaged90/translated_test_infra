@@ -200,6 +200,6 @@ variable "public_subnet" {
 variable "public_zone" {
   type = string
 }
-variable "alias" {
+variable "alias_record" {
   type = string
 }

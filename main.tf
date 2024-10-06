@@ -315,7 +315,7 @@ resource "aws_lb_target_group" "ecs_tg" {
 }
 resource "aws_route53_record" "alias_route53_record" {
   zone_id = data.aws_route53_zone.zone.id 
-  name    = var.alias
+  name    = var.alias_record
   type    = "A"
 
   alias {
