@@ -358,7 +358,7 @@ resource "aws_elasticache_cluster" "translated_cache" {
     node_type = var.cache_node_type
     num_cache_nodes = var.num_cache_nod
     parameter_group_name = var.cache_parameter_group_name
-    engine_version = var.cache_engine
+    engine_version = var.cache_engine_version
     port = 6379
     subnet_group_name = aws_elasticache_subnet_group.elasticache_sub_group.id
     security_group_ids = ["${aws_security_group.security_group_cache.id}"]
