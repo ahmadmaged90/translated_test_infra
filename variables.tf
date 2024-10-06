@@ -203,3 +203,6 @@ variable "public_zone" {
 variable "alias_record" {
   type = string
 }
+variable "cache_cluster_name" {
+  type = string
+}

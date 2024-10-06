@@ -101,6 +101,13 @@ resource "aws_security_group" "security_group_alb" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "allow https traffic"
   }
+  ingress  {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["${var.vpc_cidr}"]
+    description = "allow all"
+  }
 
   egress {
     from_port   = 0
@@ -346,11 +353,11 @@ resource "aws_db_instance" "translated-test" {
     
 }
 resource "aws_elasticache_cluster" "translated_cache" {
-    cluster_id = "cluster-example"
-    engine = "redis"
-    node_type = "cache.t2.micro"
-    num_cache_nodes = 1
-    parameter_group_name = "default.redis4.0"
+    cluster_id = var.cache_cluster_name
+    engine = var.engine_cache
+    node_type = var.cache_node_type
+    num_cache_nodes = var.num_cache_nod
+    parameter_group_name = var.cache_parameter_group_name
     engine_version = var.cache_engine
     port = 6379
     subnet_group_name = aws_elasticache_subnet_group.elasticache_sub_group.id
