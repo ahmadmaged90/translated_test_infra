@@ -7,7 +7,6 @@ resource "aws_vpc" "translated-test" {
 }
 resource "aws_subnet" "translated_test" {
     for_each = zipmap(var.availability_zones, var.subnet_cidrs_api)
-  #map_public_ip_on_launch = true
     vpc_id = aws_vpc.translated-test.id
     cidr_block = each.value
     availability_zone = each.key
