@@ -30,7 +30,6 @@ resource "aws_subnet" "translated_db_subnet2" {
     }
 }
 resource "aws_subnet" "public_subnet" {
-    depends_on = [ aws_subnet.translated_test ]
     vpc_id = aws_vpc.translated-test.id
     cidr_block = var.public_subnet
     availability_zone = var.public_zone
@@ -39,53 +38,24 @@ resource "aws_subnet" "public_subnet" {
     }
 }
 resource "aws_internet_gateway" "internet_gateway_translated" {
-  depends_on = [ aws_subnet.public_subnet,aws_subnet.translated_test ]
   vpc_id = aws_vpc.translated-test.id
   tags = {
     Name = var.internet_gateway_name
   }
 }
-resource "aws_eip" "Nat-Gateway-EIP" {
-}
-resource "aws_nat_gateway" "nat_gateway" {
-    depends_on = [
-        aws_eip.Nat-Gateway-EIP,
-        aws_subnet.public_subnet,
-        aws_internet_gateway.internet_gateway_translated
-    ]
-    allocation_id = aws_eip.Nat-Gateway-EIP.id
-    subnet_id = aws_subnet.public_subnet.id
-    tags = {
-        Name = "nat-gateway_translated"
-    }
-}
 resource "aws_route_table" "route_table_translated" {
-    depends_on = [  
-        aws_nat_gateway.nat_gateway,
-        aws_route_table.nat_route
-    ]
     vpc_id = aws_vpc.translated-test.id
     route {
         cidr_block = "0.0.0.0/0"
         gateway_id = aws_internet_gateway.internet_gateway_translated.id
     }
 }
-resource "aws_route_table" "nat_route" {
-    depends_on = [ aws_nat_gateway.nat_gateway ]
-    vpc_id = aws_vpc.translated-test.id
-    route {
-        cidr_block = "0.0.0.0/0"
-        nat_gateway_id = aws_nat_gateway.nat_gateway.id
-   }
-}
 resource "aws_route_table_association" "subnet_route" {
-    depends_on = [ aws_nat_gateway.nat_gateway, aws_subnet.public_subnet, aws_route_table.nat_route ]
     for_each = aws_subnet.translated_test
     subnet_id      = each.value.id
     route_table_id = aws_route_table.route_table_translated.id
 }
-resource "aws_route_table_association" "public_subnet_route" {
-  depends_on = [ aws_nat_gateway.nat_gateway, aws_subnet.public_subnet, aws_route_table.nat_route, aws_route_table_association.subnet_route ] 
+resource "aws_route_table_association" "public_subnet_route" { 
   subnet_id      = aws_subnet.public_subnet.id
   route_table_id = aws_route_table.route_table_translated.id
 }
