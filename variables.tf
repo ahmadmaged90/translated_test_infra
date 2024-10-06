@@ -187,9 +187,6 @@ variable "capacity_provider" {
 variable "main_domain_name" {
   type = string
 }
-variable "cache_engine" {
-  type = string
-}
 variable "redis_port" {
   type = number
   default = 6379
