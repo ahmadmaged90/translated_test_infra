@@ -82,7 +82,7 @@ resource "aws_route_table_association" "subnet_route" {
     depends_on = [ aws_nat_gateway.nat_gateway, aws_subnet.public_subnet, aws_route_table.nat_route ]
     for_each = aws_subnet.translated_test
     subnet_id      = each.value.id
-    route_table_id = aws_route_table.nat_route.id
+    route_table_id = aws_route_table.route_table_translated.id
 }
 resource "aws_route_table_association" "public_subnet_route" {
   depends_on = [ aws_nat_gateway.nat_gateway, aws_subnet.public_subnet, aws_route_table.nat_route, aws_route_table_association.subnet_route ] 
